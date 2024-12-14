@@ -24,8 +24,8 @@ with open("company_links.json", "r", encoding="utf-8") as file:
 collected_data = {}
 
 # Проход по каждой ссылке в JSON
-for city, links in data.items():
-    collected_data[city] = []  # Создаем список для каждого города
+for category, links in data.items():
+    collected_data[category] = []  # Создаем список для каждого города
 
     for link in links:
         try:
@@ -57,7 +57,7 @@ for city, links in data.items():
                 # print(f"{company_name[0]} || {company_number[0]}")
 
                 # Сохраняем данные в словарь
-                collected_data[city].append(
+                collected_data[category].append(
                     {
                         "company_name": company_name[0],
                         "company_number": company_number[0],

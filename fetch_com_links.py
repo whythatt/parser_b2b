@@ -92,20 +92,38 @@ citys = [
     # "Якутск",
     # "Ярославль",
 ]
-categories = ["Салон красоты"]  # 'Салоны красоты'
+categories = [
+    # "туристические агентства",
+    # "магазин одежды",
+    # "кафе",
+    # "Салон красоты",
+    # "рестораны",
+    # "аптеки",
+    # "автосервисы",
+    # "фитнес-клубы",
+    # "магазины электроники",
+    # "магазины товаров для дома",
+    # "парикмахерские",
+    # "строительные компании",
+    # "клининговые услуги",
+]
 
 # Настройка драйвера
-driver = webdriver.Chrome()
+options = webdriver.ChromeOptions()
+options.add_argument("--disable-dev-shm-usage")
+driver = webdriver.Chrome(options=options)
 
 all_company_links = {}
 
 for city in citys:
     for category in categories:
+        print(category)
         # Открытие Яндекс Карт
         driver.get("https://yandex.ru/maps")
-        WebDriverWait(driver, 300).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".input__control"))
-        )
+        # WebDriverWait(driver, 300).until(
+        #     EC.presence_of_element_located((By.CSS_SELECTOR, ".input__control"))
+        # )
+        time.sleep(3)
 
         # Поиск по запросу
         search_box = driver.find_element(
@@ -126,7 +144,7 @@ for city in citys:
         last_height = driver.execute_script(
             "return document.querySelector('.scroll__container').scrollHeight"
         )
-        time.sleep(4)
+        time.sleep(8)
 
         count = 0
         while True:
@@ -152,11 +170,15 @@ for city in citys:
         company_links = ["https://yandex.ru" + link for link in all_links]
 
         # Добавляем ссылки в словарь под названием города
-        all_company_links[city] = company_links
+        all_company_links[category] = company_links
+        with open("company_links.json", "a", encoding="utf-8") as file:
+            json.dump(
+                {f"{category}": company_links}, file, indent=4, ensure_ascii=False
+            )
 
 # Сохранение всех собранных данных в JSON файл
-with open("company_links.json", "w", encoding="utf-8") as file:
-    json.dump(all_company_links, file, indent=4, ensure_ascii=False)
+# with open("company_links.json", "w", encoding="utf-8") as file:
+#     json.dump(all_company_links, file, indent=4, ensure_ascii=False)
 
 # Закрытие драйвера
 driver.quit()
