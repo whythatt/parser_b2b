@@ -11,18 +11,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 # Список городов
 citys = [
-    "Воронеж",
-    "Екатеринбург",
     "Казань",
-    "Калининград",
     "Краснодар",
     "Курск",
     "Липецк",
-    "Москва",
-    "Пермь",
-    "Ростов-на-Дону",  # Полное название
-    "Омск",
-    "Орел",
+    # "Воронеж",
+    # "Екатеринбург",
+    # "Калининград",
+    # "Москва",
+    # "Пермь",
+    # "Ростов-на-Дону",  # Полное название
+    # "Омск",
+    # "Орел",
     # "Абакан",
     # "Архангельск",
     # "Астрахань",
@@ -93,50 +93,55 @@ citys = [
     # "Ярославль",
 ]
 categories = [
-    "микрозайм"
+    # "микрозайм",
     # "туристические агентства",
     # "магазин одежды",
     # "кафе",
-    # "Салон красоты",
     # "рестораны",
     # "автосервисы",
     # "фитнес-клубы",
     # "магазины электроники",
     # "магазины товаров для дома",
     # "парикмахерские",
-    # "строительные компании",
+    # "строительные магазины",
     # "клининговые услуги",
+    # "коворкинги",
+    # "рыбалка",
+    # "вязание",
+    # "охота",
+    # "гостиницы",
+    # "аренда помещений",
+    # "автошколы",
+    # "развлечения",
+    # "батутный центр",
+    "вейп шопы",
+    "Салон красоты",
 ]
 
 # Настройка драйвера
-options = webdriver.ChromeOptions()
-options.add_argument("--disable-dev-shm-usage")
-driver = webdriver.Chrome(options=options)
+# options = webdriver.ChromeOptions()
+# options.add_argument("--disable-dev-shm-usage")
+# driver = webdriver.Chrome(options=options)
+driver = webdriver.Firefox()
 
 all_company_links = {}
+
+driver.get("https://yandex.ru/maps")
 
 for city in citys:
     for category in categories:
         print(category)
-        # Открытие Яндекс Карт
-        driver.get("https://yandex.ru/maps")
-        # WebDriverWait(driver, 300).until(
-        #     EC.presence_of_element_located((By.CSS_SELECTOR, ".input__control"))
-        # )
         time.sleep(3)
+        # Открытие Яндекс Карт
 
         # Поиск по запросу
-        search_box = driver.find_element(
-            By.CSS_SELECTOR, ".input__control"
-        )  # Найдите правильный ID элемента поиска
+        search_box = driver.find_element(By.CSS_SELECTOR, ".input__control")
         search_box.clear()  # Очистка поля перед вводом
         search_box.send_keys(f"{city} {category}")
         search_box.send_keys(Keys.RETURN)
 
-        # time.sleep(5)  # Задержка для загрузки результатов
-
         # Прокрутка страницы до загрузки всех данных (можно адаптировать под ваши нужды)
-        WebDriverWait(driver, 300).until(
+        WebDriverWait(driver, 100).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".scroll__container"))
         )
 
@@ -144,14 +149,13 @@ for city in citys:
         last_height = driver.execute_script(
             "return document.querySelector('.scroll__container').scrollHeight"
         )
-        time.sleep(8)
+        time.sleep(3)
 
         count = 0
         while True:
             elem = driver.find_element(By.CLASS_NAME, "scroll__container")
-            time.sleep(2)
             elem.send_keys(Keys.END)
-            time.sleep(4)
+            time.sleep(8)
             new_height = driver.execute_script(
                 "return document.querySelector('.scroll__container').scrollHeight"
             )
@@ -172,7 +176,9 @@ for city in citys:
         # Добавляем ссылки в словарь под названием города
         all_company_links[category] = company_links
         with open("company_links.json", "a", encoding="utf-8") as file:
-            json.dump({f"{city}": company_links}, file, indent=4, ensure_ascii=False)
+            json.dump(
+                {f"{category}": company_links}, file, indent=4, ensure_ascii=False
+            )
 
 # Сохранение всех собранных данных в JSON файл
 # with open("company_links.json", "w", encoding="utf-8") as file:

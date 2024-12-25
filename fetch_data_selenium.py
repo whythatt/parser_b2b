@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
 # Настройка Selenium WebDriver
-driver = webdriver.Chrome()
+driver = webdriver.Firefox()
 
 # Чтение данных из JSON файла
 with open("company_links.json", "r", encoding="utf-8") as file:
