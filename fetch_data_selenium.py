@@ -20,7 +20,7 @@ collected_data = {}
 for city, links in data.items():
     collected_data[city] = []  # Создаем список для каждого города
 
-    for link in links[:5]:  # Ограничиваем количество ссылок для обработки
+    for link in links:  # Ограничиваем количество ссылок для обработки
         try:
             driver.get(link)  # Переход к ссылке
             time.sleep(2)  # Задержка для загрузки страницы
