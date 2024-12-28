@@ -3,8 +3,6 @@ import time
 
 from lxml import etree
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 
 # Настройка Selenium WebDriver
 driver = webdriver.Firefox()
@@ -40,6 +38,12 @@ for city, links in data.items():
             if company_name:
                 company_name = company_name[0].strip()
 
+            category = tree.xpath(
+                "//a[@class='breadcrumbs-view__breadcrumb _outline'][3]/text()"
+            )
+            if category:
+                category = category[0].strip()
+
             company_number = tree.xpath(
                 '//div[@class="orgpage-phones-view__phone-number"]/text()'
             )
@@ -52,6 +56,7 @@ for city, links in data.items():
                     {
                         "company_name": company_name,
                         "company_number": company_number,
+                        "category": category,
                     }
                 )
 
@@ -61,7 +66,7 @@ for city, links in data.items():
                 # Здесь можно добавить логику для решения капчи
 
             else:
-                print(company_name, "+", company_number)
+                print(category)
 
         except Exception as e:
             print(f"Ошибка при обработке {link}: {e}")
