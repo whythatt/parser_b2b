@@ -50,6 +50,10 @@ for city, links in data.items():
             if company_number:
                 company_number = company_number[0].strip()
 
+            link = tree.xpath('//a[@class="business-urls-view__link"]/@href')
+            if link:
+                link = link[0].strip()
+
             if company_number:
                 # Сохраняем данные в словарь
                 collected_data[city].append(
@@ -57,6 +61,7 @@ for city, links in data.items():
                         "company_name": company_name,
                         "company_number": company_number,
                         "category": category,
+                        "website": link,
                     }
                 )
 
