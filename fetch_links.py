@@ -115,6 +115,7 @@ citys = [
 #     "Секонд хенд",
 # ]
 categories = [
+    "графический дизайн",
     "автосервисы",
     "агентства недвижимости",
     "бары и пабы",
@@ -122,7 +123,6 @@ categories = [
     "вязание",
     "ветеринарные клиники",
     "гостиницы",
-    "графический дизайн",
     "дизайн интерьеров",
     "зоомагазины",
     "интернет-магазины",
@@ -170,7 +170,6 @@ driver.get("https://yandex.ru/maps")
 for city in citys:
     all_city_links = []
     for category in categories:
-        print(category)
         time.sleep(3)
         # Открытие Яндекс Карт
 
@@ -181,8 +180,10 @@ for city in citys:
         search_box.send_keys(Keys.RETURN)
 
         # Прокрутка страницы до загрузки всех данных (можно адаптировать под ваши нужды)
-        scroll_bar = driver.find_element(By.CSS_SELECTOR, ".scroll__container")
-        if scroll_bar:
+        print(category)
+        time.sleep(5)
+        checker = driver.find_elements(By.CSS_SELECTOR, ".add-business-view")
+        if not checker:
             WebDriverWait(driver, 100).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, ".scroll__container"))
             )
@@ -193,7 +194,6 @@ for city in citys:
             )
             time.sleep(3)
 
-            count = 0
             while True:
                 elem = driver.find_element(By.CLASS_NAME, "scroll__container")
                 elem.send_keys(Keys.END)
@@ -201,8 +201,6 @@ for city in citys:
                 new_height = driver.execute_script(
                     "return document.querySelector('.scroll__container').scrollHeight"
                 )
-                count += 1
-                print(count)
                 if new_height == last_height:
                     break
 
