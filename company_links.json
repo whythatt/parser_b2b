@@ -1,20 +1,24 @@
 {
-    "Казань": [],
-    "Краснодар": [],
+    "Краснодар": [
+        "https://yandex.ru/maps/org/batuty/73606146821/",
+        "https://yandex.ru/maps/org/flyzone/153755965085/",
+        "https://yandex.ru/maps/org/pandoriya/22564940922/",
+        "https://yandex.ru/maps/org/happy_ville/184979059491/",
+        "https://yandex.ru/maps/discovery/podborka_batutnyj-centr_krasnodar-35/",
+        "https://yandex.ru/maps/org/batuty/73606146821/",
+        "https://yandex.ru/maps/org/flayzon/6749431164/",
+        "https://yandex.ru/maps/org/flyzone/153755965085/",
+        "https://yandex.ru/maps/org/pandoriya/22564940922/",
+        "https://yandex.ru/maps/discovery/podborka_batutnyj-centr_krasnodar-35/"
+    ],
+    "Казань": [
+        "https://yandex.ru/maps/org/vnebopark/16309776190/",
+        "https://yandex.ru/maps/org/yu_family_park/86073765279/",
+        "https://yandex.ru/maps/org/naduvnyye_i_sportivnyye_batuty_joy/119195574872/",
+        "https://yandex.ru/maps/org/krysha/189120390645/"
+    ],
     "Курск": [
-        "https://yandex.ru/maps/org/territoriya_fitnesa/1737468905/",
-        "https://yandex.ru/maps/org/tri_okeana/1055271683/",
-        "https://yandex.ru/maps/org/fizkulturno_ozdorovitelny_kompleks_yugo_zapadny/37761228573/",
-        "https://yandex.ru/maps/org/dyussh_6/136847572009/",
-        "https://yandex.ru/maps/discovery/podborka_bassejn_kursk-8/",
-        "https://yandex.ru/maps/org/rybyonok/181919439169/",
-        "https://yandex.ru/maps/org/nanodetki/104571208701/",
-        "https://yandex.ru/maps/org/shkola_plavaniya_territoriya_fitnesa/71508590220/",
-        "https://yandex.ru/maps/org/start/1791546355/",
-        "https://yandex.ru/maps/org/solovyinyye_zori/151584474490/",
-        "https://yandex.ru/maps/org/banya_magnat/65289013591/",
-        "https://yandex.ru/maps/org/barkhat/16651499193/",
-        "https://yandex.ru/maps/org/aleksandriya/132646652040/",
-        "https://yandex.ru/maps/org/akva_bebik/127118121547/"
+        "https://yandex.ru/maps/org/zkidz/104371947934/",
+        "https://yandex.ru/maps/org/smayl_park/198342868729/"
     ]
 }

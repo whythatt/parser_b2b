@@ -1,7 +1,6 @@
 import json
 import time
 from concurrent.futures import ThreadPoolExecutor
-from queue import Queue
 
 from fake_useragent import UserAgent
 from lxml import etree
@@ -16,9 +15,10 @@ from selenium_stealth import stealth
 def create_driver():
     # ua = UserAgent()
     options = webdriver.ChromeOptions()
-    # options.add_argument(f"--user-agent={ua.random}")
-    options.add_argument("--headless")
+    # options.add_argument(f'--user-agent={ua.random}')
+    # options.add_argument("--headless")  # Режим без окна
     driver = webdriver.Chrome(options=options)
+
     return driver
 
 
@@ -29,18 +29,10 @@ with open("company_links.json", "r", encoding="utf-8") as file:
 # Словарь для хранения собранных данных
 collected_data = {}
 
-# Создаем один WebDriver для всех запросов
-driver = create_driver()
-
-# Очередь для синхронизации доступа к WebDriver
-driver_queue = Queue()
-driver_queue.put(driver)
-
 
 def process_link(link):
     try:
-        # Получаем WebDriver из очереди
-        driver = driver_queue.get()
+        driver = create_driver()  # Создаем новый WebDriver для каждого потока
 
         driver.get(link)
 
@@ -92,37 +84,40 @@ def process_link(link):
             else:
                 result = None
 
-        # Возвращаем WebDriver в очередь
-        driver_queue.put(driver)
+        driver.quit()  # Закрываем WebDriver после использования
 
         return result
 
-    except Exception:
-        print(f"Ошибка при обработке {link}")
+    except Exception as e:
+        print(f"Ошибка при обработке {link}: {e}")
         return None
 
 
 def main():
     global collected_data
-    tasks = [link for links in data.values() for link in links]
+    tasks = []
+
+    # Выбираем 3 города для параллельной обработки
+    cities = list(data.keys())[:3]
+
+    for city in cities:
+        tasks.extend(data[city])
 
     start_time = time.time()
 
-    # Используем max_workers=1, чтобы задержка работала как ожидается
-    with ThreadPoolExecutor(max_workers=1) as executor:
+    with ThreadPoolExecutor(max_workers=5) as executor:
         results = list(executor.map(process_link, tasks))
 
     index = 0
-    for city, links in data.items():
+    for city in cities:
         collected_data[city] = [
             result
-            for link, result in zip(links, results[index : index + len(links)])
+            for link, result in zip(
+                data[city], results[index : index + len(data[city])]
+            )
             if result
         ]
-        index += len(links)
-
-    # Закрытие драйвера после завершения работы
-    driver.quit()
+        index += len(data[city])
 
     # Сохранение собранных данных в новый JSON файл
     with open("company_numbers.json", "w", encoding="utf-8") as outfile:
