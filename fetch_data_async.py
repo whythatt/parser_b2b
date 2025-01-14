@@ -1,19 +1,24 @@
 import json
 import time
 from concurrent.futures import ThreadPoolExecutor
+from queue import Queue
 
+from fake_useragent import UserAgent
 from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium_stealth import stealth
 
 
 # Настройка Selenium WebDriver
 def create_driver():
+    # ua = UserAgent()
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Режим без окна
-    return webdriver.Chrome(options=options)
+    # options.add_argument(f"--user-agent={ua.random}")
+    driver = webdriver.Chrome(options=options)
+    return driver
 
 
 # Чтение данных из JSON файла
@@ -23,10 +28,18 @@ with open("company_links.json", "r", encoding="utf-8") as file:
 # Словарь для хранения собранных данных
 collected_data = {}
 
+# Создаем один WebDriver для всех запросов
+driver = create_driver()
+
+# Очередь для синхронизации доступа к WebDriver
+driver_queue = Queue()
+driver_queue.put(driver)
+
 
 def process_link(link):
     try:
-        driver = create_driver()  # Создаем новый WebDriver для каждого потока
+        # Получаем WebDriver из очереди
+        driver = driver_queue.get()
 
         driver.get(link)
 
@@ -78,12 +91,13 @@ def process_link(link):
             else:
                 result = None
 
-        driver.quit()  # Закрываем WebDriver после использования
+        # Возвращаем WebDriver в очередь
+        driver_queue.put(driver)
 
         return result
 
-    except Exception as e:
-        print(f"Ошибка при обработке {link}: {e}")
+    except Exception:
+        print(f"Ошибка при обработке {link}")
         return None
 
 
@@ -93,7 +107,8 @@ def main():
 
     start_time = time.time()
 
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    # Используем max_workers=1, чтобы задержка работала как ожидается
+    with ThreadPoolExecutor(max_workers=1) as executor:
         results = list(executor.map(process_link, tasks))
 
     index = 0
@@ -105,16 +120,16 @@ def main():
         ]
         index += len(links)
 
+    # Закрытие драйвера после завершения работы
+    driver.quit()
+
     # Сохранение собранных данных в новый JSON файл
     with open("company_numbers.json", "w", encoding="utf-8") as outfile:
         json.dump(collected_data, outfile, indent=4, ensure_ascii=False)
 
     end_time = time.time()
 
-    try:
-        print(f"Сбор данных завершен! время: {(end_time - start_time) / 60:.2f}")
-    except:
-        print("Сбор данных завершен!")
+    print(f"Сбор данных завершен! время: {(end_time - start_time) / 60:.2f}")
 
 
 if __name__ == "__main__":

@@ -3,9 +3,12 @@ import time
 
 from lxml import etree
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 # Настройка Selenium WebDriver
-driver = webdriver.Firefox()
+driver = webdriver.Chrome()
 
 # Чтение данных из JSON файла
 with open("company_links.json", "r", encoding="utf-8") as file:
@@ -14,6 +17,8 @@ with open("company_links.json", "r", encoding="utf-8") as file:
 # Словарь для хранения собранных данных
 collected_data = {}
 
+start_time = time.time()
+
 # Проход по каждой ссылке в JSON
 for city, links in data.items():
     collected_data[city] = []  # Создаем список для каждого города
@@ -21,7 +26,11 @@ for city, links in data.items():
     for link in links:  # Ограничиваем количество ссылок для обработки
         try:
             driver.get(link)  # Переход к ссылке
-            time.sleep(2)  # Задержка для загрузки страницы
+            # Ожидание загрузки страницы
+            time.sleep(0.1)
+            WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.TAG_NAME, "h1"))
+            )
 
             # Получаем HTML-код страницы
             page_source = driver.page_source
@@ -71,10 +80,10 @@ for city, links in data.items():
                 # Здесь можно добавить логику для решения капчи
 
             else:
-                print(category)
+                print(company_name)
 
-        except Exception as e:
-            print(f"Ошибка при обработке {link}: {e}")
+        except Exception:
+            print(f"Ошибка при обработке {link}")
 
 # Закрытие драйвера после завершения работы
 driver.quit()
@@ -83,4 +92,6 @@ driver.quit()
 with open("company_numbers.json", "w", encoding="utf-8") as outfile:
     json.dump(collected_data, outfile, indent=4, ensure_ascii=False)
 
-print("Сбор данных завершен!")
+end_time = time.time()
+
+print(f"Сбор данных завершен! время: {(end_time - start_time) / 60:.2f}")
