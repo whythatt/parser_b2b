@@ -2,13 +2,11 @@ import json
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from fake_useragent import UserAgent
 from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium_stealth import stealth
 
 
 # Настройка Selenium WebDriver
@@ -16,7 +14,7 @@ def create_driver():
     # ua = UserAgent()
     options = webdriver.ChromeOptions()
     # options.add_argument(f'--user-agent={ua.random}')
-    # options.add_argument("--headless")  # Режим без окна
+    options.add_argument("--headless")  # Режим без окна
     driver = webdriver.Chrome(options=options)
 
     return driver

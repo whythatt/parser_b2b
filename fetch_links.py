@@ -10,9 +10,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 # Список городов
 citys = [
-    "Казань",
-    "Краснодар",
     "Курск",
+    # "Казань",
+    # "Краснодар",
     # "Липецк",
     # "Екатеринбург",
     # "Пенза",
