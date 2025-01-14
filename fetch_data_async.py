@@ -1,4 +1,5 @@
 import json
+import time
 from concurrent.futures import ThreadPoolExecutor
 
 from lxml import etree
@@ -90,6 +91,8 @@ def main():
     global collected_data
     tasks = [link for links in data.values() for link in links]
 
+    start_time = time.time()
+
     with ThreadPoolExecutor(max_workers=5) as executor:
         results = list(executor.map(process_link, tasks))
 
@@ -106,7 +109,12 @@ def main():
     with open("company_numbers.json", "w", encoding="utf-8") as outfile:
         json.dump(collected_data, outfile, indent=4, ensure_ascii=False)
 
-    print("Сбор данных завершен!")
+    end_time = time.time()
+
+    try:
+        print(f"Сбор данных завершен! время: {(end_time - start_time) / 60:.2f}")
+    except:
+        print("Сбор данных завершен!")
 
 
 if __name__ == "__main__":
