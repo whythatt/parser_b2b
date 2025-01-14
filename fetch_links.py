@@ -10,19 +10,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 # Список городов
 citys = [
-    # "Архангельск",
-    # "Омск",
-    # "Нижний Новгород",  # Полное название
-    # "Воронеж",
-    # "Казань",
-    # "Краснодар",
-    # "Курск",
+    "Казань",
+    "Краснодар",
+    "Курск",
     # "Липецк",
     # "Екатеринбург",
     # "Пенза",
-    "Калининград",
     # "Москва",
-    "Орел",
     # "Пермь",
     # "Ростов-на-Дону",  # Полное название
     # "Абакан",
@@ -113,7 +107,6 @@ categories = [
     "магазины товаров для дома",
     "мебельные магазины",
     "охота",
-    "онлайн-образование",
     "парикмахерские",
     "парфюмерия и косметика",
     "переводчики",
@@ -175,7 +168,7 @@ for city in citys:
             while True:
                 elem = driver.find_element(By.CLASS_NAME, "scroll__container")
                 elem.send_keys(Keys.END)
-                time.sleep(8)
+                time.sleep(7)
                 new_height = driver.execute_script(
                     "return document.querySelector('.scroll__container').scrollHeight"
                 )
