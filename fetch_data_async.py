@@ -3,13 +3,11 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
 
-from fake_useragent import UserAgent
 from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium_stealth import stealth
 
 
 # Настройка Selenium WebDriver
