@@ -36,10 +36,51 @@ for city, links in data.items():
             page_source = driver.page_source
             tree = etree.fromstring(page_source, etree.HTMLParser())
 
-            # Проверка на наличие специального знака проверки
-            check_mark = tree.xpath("//h1/span/@class")
-            if check_mark == ["business-verified-badge _prioritized"]:
-                continue
+            # # Проверка на наличие специального знака проверки
+            # check_mark = tree.xpath("//h1/span/@class")
+            # if check_mark == ["business-verified-badge _prioritized"]:
+            #     continue
+            #
+            # company_name = tree.xpath(
+            #     "//h1[@class='orgpage-header-view__header']/text()"
+            # )
+            # if company_name:
+            #     company_name = company_name[0].strip()
+            #
+            # category = tree.xpath(
+            #     "//a[@class='breadcrumbs-view__breadcrumb _outline'][3]/text()"
+            # )
+            # if category:
+            #     category = category[0].strip()
+            #
+            # company_number = tree.xpath(
+            #     '//div[@class="orgpage-phones-view__phone-number"]/text()'
+            # )
+            # if company_number:
+            #     company_number = company_number[0].strip()
+            #
+            # link = tree.xpath('//a[@class="business-urls-view__link"]/@href')
+            # if link:
+            #     link = link[0].strip()
+            #
+            # if company_number:
+            #     # Сохраняем данные в словарь
+            #     collected_data[city].append(
+            #         {
+            #             "company_name": company_name,
+            #             "company_number": company_number,
+            #             "category": category,
+            #             "website": link,
+            #         }
+            #     )
+            #
+            # captcha_check = tree.xpath("//h1/text()")
+            # if captcha_check and "капча" in captcha_check[0].lower():
+            #     print("Капча обнаружена!")
+            #     # Здесь можно добавить логику для решения капчи
+
+            # else:
+            #     print(company_name)
 
             company_name = tree.xpath(
                 "//h1[@class='orgpage-header-view__header']/text()"
@@ -47,40 +88,25 @@ for city, links in data.items():
             if company_name:
                 company_name = company_name[0].strip()
 
-            category = tree.xpath(
-                "//a[@class='breadcrumbs-view__breadcrumb _outline'][3]/text()"
+            website = tree.xpath('//a[@class="business-urls-view__link"]/@href')
+            if website:
+                website = website[0].strip()
+
+            address = tree.xpath(
+                '//div[@class="business-contacts-view__address-link"]/[1]/text()'
             )
-            if category:
-                category = category[0].strip()
+            if address:
+                address = address[0].strip()
 
-            company_number = tree.xpath(
-                '//div[@class="orgpage-phones-view__phone-number"]/text()'
-            )
-            if company_number:
-                company_number = company_number[0].strip()
-
-            link = tree.xpath('//a[@class="business-urls-view__link"]/@href')
-            if link:
-                link = link[0].strip()
-
-            if company_number:
+            if website:
                 # Сохраняем данные в словарь
                 collected_data[city].append(
                     {
                         "company_name": company_name,
-                        "company_number": company_number,
-                        "category": category,
-                        "website": link,
+                        "address": address,
+                        "website": website,
                     }
                 )
-
-            captcha_check = tree.xpath("//h1/text()")
-            if captcha_check and "капча" in captcha_check[0].lower():
-                print("Капча обнаружена!")
-                # Здесь можно добавить логику для решения капчи
-
-            else:
-                print(company_name)
 
         except Exception:
             print(f"Ошибка при обработке {link}")

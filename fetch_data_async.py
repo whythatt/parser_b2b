@@ -35,11 +35,6 @@ driver_queue.put(driver)
 
 def process_link(link):
     try:
-        if link.startswith("/"):
-            link = f"https://yandex.ru/maps{link}"
-        elif not link.startswith("http"):
-            link = f"https://yandex.ru/maps/org/{link}"
-
         # Получаем WebDriver из очереди
         driver = driver_queue.get()
 
@@ -52,7 +47,7 @@ def process_link(link):
 
         # Получаем HTML-код страницы
         page_source = driver.page_source
-        tree = etree.fromstring(page_source, etree.HTMLParser())
+        tree = etree.HTML(page_source)
 
         # Проверка на наличие специального знака проверки
         # check_mark = tree.xpath("//h1/span/@class")
@@ -93,33 +88,34 @@ def process_link(link):
         #     else:
         #         result = None
 
+        result = {}
         company_name = tree.xpath("//h1[@class='orgpage-header-view__header']/text()")
         if company_name:
             company_name = company_name[0].strip()
 
-        link = tree.xpath('//a[@class="business-urls-view__link"]/@href')
-        if link:
-            link = link[0].strip()
+        website = tree.xpath('//a[@class="business-urls-view__link"]/@href')
+        if website:
+            website = website[0].strip()
+
         address = tree.xpath(
-            '//div[@class="business-contacts-view__address-link"]/[1]/text()'
+            '//div[@class="business-contacts-view__address-link"]/text()'
         )
         if address:
             address = address[0].strip()
 
-        if link:
+        if website:
             result = {
                 "name": company_name,
-                "website": link,
+                "website": website,
                 "address": address,
             }
 
         # Возвращаем WebDriver в очередь
         driver_queue.put(driver)
-
         return result
 
-    except Exception:
-        print(f"Ошибка при обработке {link}")
+    except Exception as e:
+        print(f"Ошибка при обработке {link}: {e}")
         return None
 
 
