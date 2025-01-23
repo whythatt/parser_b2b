@@ -13,7 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 # Настройка Selenium WebDriver
 def create_driver():
     options = webdriver.ChromeOptions()
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     return driver
 
