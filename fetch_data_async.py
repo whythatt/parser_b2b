@@ -12,7 +12,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 # Настройка Selenium WebDriver
 def create_driver():
+    # ua = UserAgent()
     options = webdriver.ChromeOptions()
+    # options.add_argument(f"--user-agent={ua.random}")
     options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     return driver
@@ -47,7 +49,7 @@ def process_link(link):
 
         # Получаем HTML-код страницы
         page_source = driver.page_source
-        tree = etree.HTML(page_source)
+        tree = etree.fromstring(page_source, etree.HTMLParser())
 
         # Проверка на наличие специального знака проверки
         check_mark = tree.xpath("//h1/span/@class")
@@ -88,10 +90,13 @@ def process_link(link):
             else:
                 result = None
 
+        # Возвращаем WebDriver в очередь
+        driver_queue.put(driver)
+
         return result
 
-    except Exception as e:
-        print(f"Ошибка при обработке {link}: {e}")
+    except Exception:
+        print(f"Ошибка при обработке {link}")
         return None
 
 
