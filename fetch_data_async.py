@@ -50,68 +50,44 @@ def process_link(link):
         tree = etree.HTML(page_source)
 
         # Проверка на наличие специального знака проверки
-        # check_mark = tree.xpath("//h1/span/@class")
-        # if check_mark == ["business-verified-badge _prioritized"]:
-        #     result = None
-        # else:
-        #     company_name = tree.xpath(
-        #         "//h1[@class='orgpage-header-view__header']/text()"
-        #     )
-        #     if company_name:
-        #         company_name = company_name[0].strip()
-        #
-        #     category = tree.xpath(
-        #         "//a[@class='breadcrumbs-view__breadcrumb _outline'][3]/text()"
-        #     )
-        #     if category:
-        #         category = category[0].strip()
-        #
-        #     company_number = tree.xpath(
-        #         '//div[@class="orgpage-phones-view__phone-number"]/text()'
-        #     )
-        #     if company_number:
-        #         company_number = company_number[0].strip()
-        #
-        #     link = tree.xpath('//a[@class="business-urls-view__link"]/@href')
-        #     if link:
-        #         link = link[0].strip()
-        #
-        #     print(company_name)
-        #
-        #     if company_number:
-        #         result = {
-        #             "company_name": company_name,
-        #             "company_number": company_number,
-        #             "category": category,
-        #             "website": link,
-        #         }
-        #     else:
-        #         result = None
+        check_mark = tree.xpath("//h1/span/@class")
+        if check_mark == ["business-verified-badge _prioritized"]:
+            result = None
+        else:
+            company_name = tree.xpath(
+                "//h1[@class='orgpage-header-view__header']/text()"
+            )
+            if company_name:
+                company_name = company_name[0].strip()
 
-        result = {}
-        company_name = tree.xpath("//h1[@class='orgpage-header-view__header']/text()")
-        if company_name:
-            company_name = company_name[0].strip()
+            category = tree.xpath(
+                "//a[@class='breadcrumbs-view__breadcrumb _outline'][3]/text()"
+            )
+            if category:
+                category = category[0].strip()
 
-        website = tree.xpath('//a[@class="business-urls-view__link"]/@href')
-        if website:
-            website = website[0].strip()
+            company_number = tree.xpath(
+                '//div[@class="orgpage-phones-view__phone-number"]/text()'
+            )
+            if company_number:
+                company_number = company_number[0].strip()
 
-        address = tree.xpath(
-            '//div[@class="business-contacts-view__address-link"]/text()'
-        )
-        if address:
-            address = address[0].strip()
+            link = tree.xpath('//a[@class="business-urls-view__link"]/@href')
+            if link:
+                link = link[0].strip()
 
-        if website:
-            result = {
-                "name": company_name,
-                "website": website,
-                "address": address,
-            }
+            print(company_name)
 
-        # Возвращаем WebDriver в очередь
-        driver_queue.put(driver)
+            if company_number:
+                result = {
+                    "company_name": company_name,
+                    "company_number": company_number,
+                    "category": category,
+                    "website": link,
+                }
+            else:
+                result = None
+
         return result
 
     except Exception as e:
