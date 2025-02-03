@@ -15,7 +15,7 @@ def create_driver():
     # ua = UserAgent()
     options = webdriver.ChromeOptions()
     # options.add_argument(f"--user-agent={ua.random}")
-    options.add_argument("--headless")
+    # options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     return driver
 
@@ -97,7 +97,59 @@ def process_link(link):
 
     except Exception:
         print(f"Ошибка при обработке {link}")
+        driver_queue.put(driver)
         return None
+
+
+# def process_link(link):
+#     try:
+#         # Получаем WebDriver из очереди
+#         driver = driver_queue.get()
+#
+#         driver.get(link)
+#
+#         # Ожидание загрузки страницы
+#         WebDriverWait(driver, 5).until(
+#             EC.presence_of_element_located((By.TAG_NAME, "h1"))
+#         )
+#
+#         # Получаем HTML-код страницы
+#         page_source = driver.page_source
+#         tree = etree.fromstring(page_source, etree.HTMLParser())
+#
+#         # Проверка на наличие специального знака проверки
+#         check_mark = tree.xpath("//h1/span/@class")
+#         if check_mark == ["business-verified-badge _prioritized"]:
+#             return None
+#
+#         company_name = tree.xpath("//h1[@class='orgpage-header-view__header']/text()")
+#         category = tree.xpath(
+#             "//a[@class='breadcrumbs-view__breadcrumb _outline'][3]/text()"
+#         )
+#         company_number = tree.xpath(
+#             '//div[@class="orgpage-phones-view__phone-number"]/text()'
+#         )
+#         link = tree.xpath('//a[@class="business-urls-view__link"]/@href')
+#
+#         print(company_name[0])
+#
+#         result = {
+#             "company_name": company_name[0].strip() if company_name else None,
+#             "category": category[0].strip() if category else None,
+#             "company_number": company_number[0].strip() if company_number else None,
+#             "website": link[0].strip() if link else None,
+#         }
+#
+#         # Возвращаем WebDriver в очередь
+#         driver_queue.put(driver)
+#
+#         return result
+#
+#     except Exception as e:
+#         print(f"Ошибка при обработке {link}: {e}")
+#         # Возвращаем WebDriver обратно в очередь даже в случае ошибки
+#         driver_queue.put(driver)
+#         return None
 
 
 def main():
