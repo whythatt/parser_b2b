@@ -10,7 +10,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 # Список городов
 citys = [
-    "Сочи",
+    "Тверь",
+    "Ставрополь",
+    "Иваново",
     # "Казань",
     # "Краснодар",
     # "Екатеринбург",
@@ -31,7 +33,6 @@ citys = [
     # "Волгоград",
     # "Вологда",
     # "Грозный",
-    # "Иваново",
     # "Ижевск",
     # "Иркутск",
     # "Калуга",
@@ -59,9 +60,7 @@ citys = [
     # "Севастополь",  # Полное название
     # "Северодвинск",
     # "Симферополь",
-    # "Ставрополь",
     # "Тамбов",
-    # "Тверь",
     # "Тольяти",
     # "Томск",
     # "Tюмень",
@@ -234,7 +233,7 @@ for city in citys:
     all_com_links_dict[city] = all_city_links
 
 # Сохранение всех собранных данных в JSON файл
-with open("company_links.json", "w", encoding="utf-8") as file:
+with open("company_links_more.json", "w", encoding="utf-8") as file:
     json.dump(all_com_links_dict, file, indent=4, ensure_ascii=False)
 
 # Закрытие драйвера

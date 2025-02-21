@@ -21,5 +21,6 @@ with open("company_numbers.csv", "w", newline="", encoding="utf-8") as csv_file:
                     company["company_number"],
                     company["category"],
                     company["website"],
+                    city
                 ],
             )

@@ -11,7 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 driver = webdriver.Chrome()
 
 # Чтение данных из JSON файла
-with open("company_links.json", "r", encoding="utf-8") as file:
+with open("company_links_more.json", "r", encoding="utf-8") as file:
     data = json.load(file)
 
 # Словарь для хранения собранных данных
