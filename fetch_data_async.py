@@ -21,7 +21,7 @@ def create_driver():
 
 
 # Чтение данных из JSON файла
-with open("company_links_more.json", "r", encoding="utf-8") as file:
+with open("company_links_иваново.json", "r", encoding="utf-8") as file:
     data = json.load(file)
 
 # Словарь для хранения собранных данных
@@ -101,56 +101,35 @@ def process_link(link):
         return None
 
 
-# def process_link(link):
-#     try:
-#         # Получаем WebDriver из очереди
-#         driver = driver_queue.get()
+# def main():
+#     global collected_data
+#     tasks = [link for links in data.values() for link in links]
 #
-#         driver.get(link)
+#     start_time = time.time()
 #
-#         # Ожидание загрузки страницы
-#         WebDriverWait(driver, 5).until(
-#             EC.presence_of_element_located((By.TAG_NAME, "h1"))
-#         )
+#     # Используем max_workers=1, чтобы задержка работала как ожидается
+#     with ThreadPoolExecutor(max_workers=1) as executor:
+#         results = list(executor.map(process_link, tasks))
 #
-#         # Получаем HTML-код страницы
-#         page_source = driver.page_source
-#         tree = etree.fromstring(page_source, etree.HTMLParser())
+#     index = 0
+#     for city, links in data.items():
+#         collected_data[city] = [
+#             result
+#             for link, result in zip(links, results[index : index + len(links)])
+#             if result
+#         ]
+#         index += len(links)
 #
-#         # Проверка на наличие специального знака проверки
-#         check_mark = tree.xpath("//h1/span/@class")
-#         if check_mark == ["business-verified-badge _prioritized"]:
-#             return None
+#     # Закрытие драйвера после завершения работы
+#     driver.quit()
 #
-#         company_name = tree.xpath("//h1[@class='orgpage-header-view__header']/text()")
-#         category = tree.xpath(
-#             "//a[@class='breadcrumbs-view__breadcrumb _outline'][3]/text()"
-#         )
-#         company_number = tree.xpath(
-#             '//div[@class="orgpage-phones-view__phone-number"]/text()'
-#         )
-#         link = tree.xpath('//a[@class="business-urls-view__link"]/@href')
+#     # Сохранение собранных данных в новый JSON файл
+#     with open("company_numbers_more.json", "w", encoding="utf-8") as outfile:
+#         json.dump(collected_data, outfile, indent=4, ensure_ascii=False)
 #
-#         print(company_name[0])
+#     end_time = time.time()
 #
-#         result = {
-#             "company_name": company_name[0].strip() if company_name else None,
-#             "category": category[0].strip() if category else None,
-#             "company_number": company_number[0].strip() if company_number else None,
-#             "website": link[0].strip() if link else None,
-#         }
-#
-#         # Возвращаем WebDriver в очередь
-#         driver_queue.put(driver)
-#
-#         return result
-#
-#     except Exception as e:
-#         print(f"Ошибка при обработке {link}: {e}")
-#         # Возвращаем WebDriver обратно в очередь даже в случае ошибки
-#         driver_queue.put(driver)
-#         return None
-
+#     print(f"Сбор данных завершен! время: {(end_time - start_time) / 60:.2f}")
 
 def main():
     global collected_data
@@ -158,24 +137,27 @@ def main():
 
     start_time = time.time()
 
-    # Используем max_workers=1, чтобы задержка работала как ожидается
     with ThreadPoolExecutor(max_workers=1) as executor:
         results = list(executor.map(process_link, tasks))
 
+    # Сбор результатов по городам
+    for city in data.keys():
+        collected_data[city] = []
+
     index = 0
     for city, links in data.items():
-        collected_data[city] = [
-            result
-            for link, result in zip(links, results[index : index + len(links)])
-            if result
-        ]
-        index += len(links)
+        for link in links:
+            if index < len(results):
+                result = results[index]
+                if result:
+                    collected_data[city].append(result)
+            index += 1
 
     # Закрытие драйвера после завершения работы
     driver.quit()
 
     # Сохранение собранных данных в новый JSON файл
-    with open("company_numbers_more.json", "w", encoding="utf-8") as outfile:
+    with open("company_numbers_иваново.json", "w", encoding="utf-8") as outfile:
         json.dump(collected_data, outfile, indent=4, ensure_ascii=False)
 
     end_time = time.time()
