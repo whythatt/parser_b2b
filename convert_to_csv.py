@@ -2,11 +2,11 @@ import csv
 import json
 
 # Load JSON data from the file
-with open("company_numbers.json", "r", encoding="utf-8") as json_file:
+with open("company_numbers_тверь.json", "r", encoding="utf-8") as json_file:
     data = json.load(json_file)
 
 # Open a CSV file for writing
-with open("company_numbers.csv", "w", newline="", encoding="utf-8") as csv_file:
+with open("company_numbers_тверь.csv", "w", newline="", encoding="utf-8") as csv_file:
     writer = csv.writer(csv_file)
     # Write the header
     writer.writerow(["company_name", "company_number", "category", "website"])
@@ -21,6 +21,6 @@ with open("company_numbers.csv", "w", newline="", encoding="utf-8") as csv_file:
                     company["company_number"],
                     company["category"],
                     company["website"],
-                    city
+                    city,
                 ],
             )
