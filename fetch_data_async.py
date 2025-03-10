@@ -21,7 +21,7 @@ def create_driver():
 
 
 # Чтение данных из JSON файла
-with open("company_links_more.json", "r", encoding="utf-8") as file:
+with open("company_links_тамбов.json", "r", encoding="utf-8") as file:
     data = json.load(file)
 
 # Словарь для хранения собранных данных
@@ -101,36 +101,6 @@ def process_link(link):
         return None
 
 
-# def main():
-#     global collected_data
-#     tasks = [link for links in data.values() for link in links]
-#
-#     start_time = time.time()
-#
-#     # Используем max_workers=1, чтобы задержка работала как ожидается
-#     with ThreadPoolExecutor(max_workers=1) as executor:
-#         results = list(executor.map(process_link, tasks))
-#
-#     index = 0
-#     for city, links in data.items():
-#         collected_data[city] = [
-#             result
-#             for link, result in zip(links, results[index : index + len(links)])
-#             if result
-#         ]
-#         index += len(links)
-#
-#     # Закрытие драйвера после завершения работы
-#     driver.quit()
-#
-#     # Сохранение собранных данных в новый JSON файл
-#     with open("company_numbers_more.json", "w", encoding="utf-8") as outfile:
-#         json.dump(collected_data, outfile, indent=4, ensure_ascii=False)
-#
-#     end_time = time.time()
-#
-#     print(f"Сбор данных завершен! время: {(end_time - start_time) / 60:.2f}")
-
 def main():
     global collected_data
     tasks = [link for links in data.values() for link in links]
@@ -157,7 +127,7 @@ def main():
     driver.quit()
 
     # Сохранение собранных данных в новый JSON файл
-    with open("company_numbers_more.json", "w", encoding="utf-8") as outfile:
+    with open("company_numbers_тамбов.json", "w", encoding="utf-8") as outfile:
         json.dump(collected_data, outfile, indent=4, ensure_ascii=False)
 
     end_time = time.time()
