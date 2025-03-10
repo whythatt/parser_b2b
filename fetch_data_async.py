@@ -21,7 +21,7 @@ def create_driver():
 
 
 # Чтение данных из JSON файла
-with open("company_links_иваново.json", "r", encoding="utf-8") as file:
+with open("company_links_more.json", "r", encoding="utf-8") as file:
     data = json.load(file)
 
 # Словарь для хранения собранных данных
@@ -157,7 +157,7 @@ def main():
     driver.quit()
 
     # Сохранение собранных данных в новый JSON файл
-    with open("company_numbers_иваново.json", "w", encoding="utf-8") as outfile:
+    with open("company_numbers_more.json", "w", encoding="utf-8") as outfile:
         json.dump(collected_data, outfile, indent=4, ensure_ascii=False)
 
     end_time = time.time()
